@@ -8,6 +8,7 @@ if response.status_code==200:
     coordinates = [feature["geometry"]["coordinates"] for feature in response.json()["features"]]
     size=len(coordinates)
     print(size)
+
 def are_coordinates_near(coord1, coord2, threshold):
     lat1, lon1 = coord1
     lat2, lon2 = coord2
@@ -18,7 +19,7 @@ def are_coordinates_near(coord1, coord2, threshold):
     return lat_diff < threshold and lon_diff < threshold
 
 
-threshold = 0.01  # Adjust this threshold as needed
+threshold = 0.01  
 
 near_coordinates = []
 far_coordinates = []
@@ -37,20 +38,17 @@ for i, coord1 in enumerate(coordinates):
 print("Near Coordinates:", near_coordinates)
 
 
+@app.route('/coordinates')
+def get_coordinates():
+    # Return coordinates data as JSON
+    return jsonify(near_coordinates=near_coordinates, far_coordinates=far_coordinates)
 
 
-
-@app.route('/location', methods=['GET'])
-def get_location():
-    return jsonify(coordinates)   
 
 @app.route('/') 
 def index():
-
-
-    
-        
-    return render_template("index.html",near_coordinates=near_coordinates, far_coordinates=far_coordinates)
+       
+    return render_template("index.html")
 
 
 if __name__ == '__main__':

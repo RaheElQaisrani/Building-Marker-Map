@@ -1,7 +1,11 @@
+<script>
 var map = L.map('map').setView([44.5, -69.0], 8);
+fetch('/coordinates')
+.then(response => response.json())
+.then(data => {
 
-var near_coordinates = {{ near_coordinates | tojson | safe }};
-var far_coordinates = {{ far_coordinates | tojson | safe }};
+var near_coordinates = data.near_coordinates;
+var far_coordinates = data.far_coordinates;
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
@@ -36,3 +40,8 @@ far_coordinates.forEach(function(coord) {
     var marker = createMarker(coord[1], coord[0], 'blue');
     marker.addTo(map);
 });
+})
+.catch(error => {
+console.error('Error fetching coordinates:', error);
+});
+</script>
